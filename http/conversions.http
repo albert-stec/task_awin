@@ -1,0 +1,109 @@
+@host = http://localhost:8080
+
+### EUR -> USD, task example, expected 116.06
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": 100}
+
+### EUR -> GBP, direct rate, expected 85.60
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "GBP", "amount": 100}
+
+### USD -> EUR, inverse rate, expected 100.00
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "USD", "targetCurrency": "EUR", "amount": 116.06}
+
+### GBP -> PLN, cross rate through EUR, expected 505.31
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "GBP", "targetCurrency": "PLN", "amount": 100}
+
+### SEK -> NOK, large amount, expected 988107.11
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "SEK", "targetCurrency": "NOK", "amount": 1000000}
+
+### USD -> USD, same currency, expected 100.00
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "USD", "targetCurrency": "USD", "amount": 100}
+
+### EUR -> EUR, HALF_EVEN tie, expected 0.12
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "EUR", "amount": 0.125}
+
+### EUR -> USD, tiny amount rounds to 0.00
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": 0.001}
+
+### 400: missing fields
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{}
+
+### 400: lowercase currency code
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "eur", "targetCurrency": "USD", "amount": 100}
+
+### 400: currency code with wrong length
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EURO", "targetCurrency": "USD", "amount": 100}
+
+### 400: zero amount
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": 0}
+
+### 400: negative amount
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": -5}
+
+### 400: too many decimal places
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": 1.1234567}
+
+### 400: huge exponent
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": 1e999999999}
+
+### 400: amount is not a number
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR", "targetCurrency": "USD", "amount": "abc"}
+
+### 400: malformed JSON
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "EUR",
+
+### 400: unsupported currency
+POST {{host}}/api/v1/conversions
+Content-Type: application/json
+
+{"sourceCurrency": "JPY", "targetCurrency": "USD", "amount": 100}
