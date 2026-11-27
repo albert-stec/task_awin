@@ -1,5 +1,6 @@
 package com.stecalbert.taskawin.conversion;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ public class ConversionController {
     }
 
     @PostMapping
-    public ConversionResponse convert(@RequestBody ConversionRequest request) {
+    public ConversionResponse convert(@Valid @RequestBody ConversionRequest request) {
         return new ConversionResponse(
                 converter.convert(request.amount(), request.sourceCurrency(), request.targetCurrency()));
     }
